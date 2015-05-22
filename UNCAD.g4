@@ -15,8 +15,24 @@ grammar UNCAD;
 
 //start parsing file
 doc
-	:	TAG1INIT CANVAS (COMMA SCALE_X ASSIGN REAL)? (COMMA SCALE_Y ASSIGN REAL)? TAGEND body TAG1INIT CANVAS TAGEND	
-	|   TAG1INIT CANVAS (COMMA SCALE_Y ASSIGN REAL)? (COMMA SCALE_X ASSIGN REAL)? TAGEND body TAG1INIT CANVAS TAGEND	
+	:   canvas
+	;
+
+canvas
+	:	canvas_init body canvas_end	
+	;
+
+canvas_init
+	:   TAG1INIT CANVAS canvas_props TAGEND
+	;
+	
+canvas_end
+	:   TAG2INIT CANVAS TAGEND
+	;
+	
+canvas_props
+	:	(COMMA SCALE_Y ASSIGN REAL)? (COMMA SCALE_X ASSIGN REAL)?
+	|	(COMMA SCALE_X ASSIGN REAL)? (COMMA SCALE_Y ASSIGN REAL)?
 	;
 
 body
@@ -25,20 +41,37 @@ body
 	;
 	
 p_tag
-	: 	TAG1INIT props TAGEND body TAG1INIT COLOR TAGEND
+	: 	 p_tag_init body p_tag_end
+	;
+	
+p_tag_init
+	:	 TAG1INIT props TAGEND
+	;
+	
+p_tag_end
+	:	 TAG2INIT PROPS TAGEND
 	;
 	
 o_tag
-	:	TAG1INIT CIRCLE (COMMA props)? TAGEND (body)? TAG1INIT CIRCLE TAGEND
+	: o_tag_init (body)? o_tag_end
 	;
 	
+o_tag_init
+	:	 TAG1INIT CIRCLE (COMMA props)? TAGEND
+	;
+	
+o_tag_end
+	:	 TAG2INIT CIRCLE TAGEND
+	;
+
+	
 props
-	:	O_ID ASSIGN ID (COMMA COLOR ASSIGN color)? (COMMA R ASSIGN REAL)?
-	|	O_ID ASSIGN ID (COMMA R ASSIGN REAL)?  (COMMA COLOR ASSIGN color)?
-	|   COLOR ASSIGN color (COMMA R ASSIGN REAL)? (COMMA O_ID ASSIGN ID)?
-	|   COLOR ASSIGN color (COMMA O_ID ASSIGN ID)? (COMMA R ASSIGN REAL)?
-	|   R ASSIGN REAL (COMMA COLOR ASSIGN color)? (COMMA O_ID ASSIGN ID)?
-	|	R ASSIGN REAL (COMMA O_ID ASSIGN ID)? (COMMA COLOR ASSIGN color)? 
+	:	O_ID ASSIGN ID (COMMA COLOR ASSIGN color)? (COMMA SIZE ASSIGN REAL)?
+	|	O_ID ASSIGN ID (COMMA SIZE ASSIGN REAL)?  (COMMA COLOR ASSIGN color)?
+	|   COLOR ASSIGN color (COMMA SIZE ASSIGN REAL)? (COMMA O_ID ASSIGN ID)?
+	|   COLOR ASSIGN color (COMMA O_ID ASSIGN ID)? (COMMA SIZE ASSIGN REAL)?
+	|   SIZE ASSIGN REAL (COMMA COLOR ASSIGN color)? (COMMA O_ID ASSIGN ID)?
+	|	SIZE ASSIGN REAL (COMMA O_ID ASSIGN ID)? (COMMA COLOR ASSIGN color)? 
 	;
 
 color
@@ -61,11 +94,19 @@ TAGEND	       : '>';
 
 CANVAS         : 'canvas';
 CIRCLE         : 'circle';
+SQUARE         : 'square';
+ELLIPSE		   : 'ellipse';
+RECTANGLE      : 'rectangle';
+TRIANGLE       : 'triangle';
+
 
 SCALE_X		   : 'x';
 SCALE_Y		   : 'y';
 O_ID		   : 'id';
+PROPS		   : 'props';
 COLOR		   : 'color';
+SIZE		   : 'size';
+POSITION       : 'position';
 R			   : 'r';
 H              : 'h';
 L			   : 'l';
