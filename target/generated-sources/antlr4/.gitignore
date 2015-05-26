@@ -23,3 +23,10 @@
 /UNCAD$2.class
 /UNCADBaseListener.class
 /UNCADParser$CanvasContext.class
+/UNCADParser$Canvas_endContext.class
+/UNCADParser$Canvas_initContext.class
+/UNCADParser$Canvas_propsContext.class
+/UNCADParser$O_tag_endContext.class
+/UNCADParser$O_tag_initContext.class
+/UNCADParser$P_tag_endContext.class
+/UNCADParser$P_tag_initContext.class

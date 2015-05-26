@@ -8,6 +8,7 @@ import org.antlr.v4.runtime.tree.TerminalNode;
 import javax.swing.JFrame;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+
 /**
  * This class provides an empty implementation of {@link UNCADListener},
  * which can be extended to create a listener which only needs to handle a subset
@@ -27,7 +28,8 @@ public class UNCADBaseListener implements UNCADListener {
 	ProcessingCanvas canvas;
 	boolean obj_props = false;
 	boolean error_flag = false;
-
+	boolean canvas_flag = false;
+	
 	public UNCADBaseListener(UNCADParser parser,String name) {
 		this.parser = parser;
 		this.shapes = new ArrayList<CanvasShape>();
@@ -35,53 +37,40 @@ public class UNCADBaseListener implements UNCADListener {
 		this.frame.setTitle(name);
 	}
 	
-	@Override public void enterDoc(UNCADParser.DocContext ctx) {
-	}
 	
-	public String getProps(){return "nul";};
+	@Override public void enterDoc(UNCADParser.DocContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDoc(UNCADParser.DocContext ctx) { 
+	@Override public void exitDoc(UNCADParser.DocContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCanvas(UNCADParser.CanvasContext ctx) { 		
+		
 	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	
-	@Override public void enterCanvas(UNCADParser.CanvasContext ctx) {
-		System.out.println("canvas rule detected");
-		String in = ctx.getText();
-		boolean search_flag=true;
-		int index;
-		while(search_flag){
-			index = in.indexOf("<canvas");
-			if(index>=0){
-				in = in.replaceFirst("<canvas","");
-				index = in.indexOf("</canvas>");
-				if(index>=0){
-					in = in.replaceFirst("</canvas>","");
-					if(in.indexOf("<canvas")>=0){
-						System.out.println("More than one canvas definition found");
-						error_flag = true;
-					}
-					if(in.indexOf("</canvas>")>=0){
-						System.out.println("More than one canvas end-definition found");
-						error_flag = true;
-					}
-					search_flag = false;
-					
-				}else{
-					System.out.println("No canvas end-definition found");
-					search_flag=false;
-				}
-			}else{
-				System.out.println("No canvas definition found");
-				search_flag=false;
-			}
+	@Override public void exitCanvas(UNCADParser.CanvasContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCanvas_init(UNCADParser.Canvas_initContext ctx) { 
+		System.out.println("canvas init tag detected");
+		if(!canvas_flag){
+			System.out.println(ctx.getText());
+			canvas_flag = true;
+		}else{
+			System.out.println("Error(Line:"+ctx.getStart().getLine()+") Previous canvas declaration detected.");
 		}
 	}
 	/**
@@ -89,10 +78,34 @@ public class UNCADBaseListener implements UNCADListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitCanvas(UNCADParser.CanvasContext ctx) { 
-		this.canvas = new ProcessingCanvas(this.shapes);		
-		this.frame.add(this.canvas);
+	@Override public void exitCanvas_init(UNCADParser.Canvas_initContext ctx) { 
+		System.out.println("canvas end tag detected \n props suposed to be verified");
+		System.out.println(ctx.getText());
 	}
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCanvas_end(UNCADParser.Canvas_endContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCanvas_end(UNCADParser.Canvas_endContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCanvas_props(UNCADParser.Canvas_propsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCanvas_props(UNCADParser.Canvas_propsContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -122,17 +135,61 @@ public class UNCADBaseListener implements UNCADListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterO_tag(UNCADParser.O_tagContext ctx) {
-		System.out.println(ctx.getText());
-	}
+	@Override public void enterP_tag_init(UNCADParser.P_tag_initContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitO_tag(UNCADParser.O_tagContext ctx) { 
-		System.out.println("OBJECT EXIT para que ya se hallan verificado las propiedades"+ctx.getText());
-	}
+	@Override public void exitP_tag_init(UNCADParser.P_tag_initContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterP_tag_end(UNCADParser.P_tag_endContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitP_tag_end(UNCADParser.P_tag_endContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterO_tag(UNCADParser.O_tagContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitO_tag(UNCADParser.O_tagContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterO_tag_init(UNCADParser.O_tag_initContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitO_tag_init(UNCADParser.O_tag_initContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterO_tag_end(UNCADParser.O_tag_endContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitO_tag_end(UNCADParser.O_tag_endContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
