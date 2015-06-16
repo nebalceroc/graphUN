@@ -1,0 +1,4 @@
+<canvas,x=100,y=50>
+	<circle,id=c1,color=red>
+	</circle>
+</canvas>

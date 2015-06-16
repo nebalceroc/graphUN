@@ -30,3 +30,7 @@
 /UNCADParser$O_tag_initContext.class
 /UNCADParser$P_tag_endContext.class
 /UNCADParser$P_tag_initContext.class
+/UNCADParser$Canvas_scalexContext.class
+/UNCADParser$Canvas_scaleyContext.class
+/UNCADParser$O_scalexContext.class
+/UNCADParser$O_scaleyContext.class

@@ -14,8 +14,27 @@ public class ProcessingCanvas extends JPanel{
 		this.shapes = shapes;
 	}
 	
+	private void init(Graphics g){
+		String type;
+		for(int x=0;x<this.shapes.size();x++){
+			type=this.shapes.get(x).getType();
+			switch(type){
+				case "circle":
+					//drawCircle(a,b,g);
+					break;
+				case "square":
+					break;
+				case "rectangle": 
+					break;
+				case "triangle":
+					break;
+				case "ellipse":
+					break;
+			}
+		}
+	}
+	
 	private void doDrawing(Graphics g) {
-
         Graphics2D g2d = (Graphics2D) g;
         g2d.fillOval(270, 130, 50, 50);;
     }
@@ -33,6 +52,7 @@ public class ProcessingCanvas extends JPanel{
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+        init(g);
         
     }
 }

@@ -31,8 +31,15 @@ canvas_end
 	;
 	
 canvas_props
-	:	(COMMA SCALE_Y ASSIGN REAL)? (COMMA SCALE_X ASSIGN REAL)?
-	|	(COMMA SCALE_X ASSIGN REAL)? (COMMA SCALE_Y ASSIGN REAL)?
+	:	(COMMA canvas_scalex)? (COMMA canvas_scaley)?
+	;
+
+canvas_scalex
+	:	SCALE_X ASSIGN REAL
+	;
+	
+canvas_scaley
+	:   SCALE_Y ASSIGN REAL
 	;
 
 body
@@ -58,20 +65,42 @@ o_tag
 	
 o_tag_init
 	:	 TAG1INIT CIRCLE (COMMA props)? TAGEND
+	|	 TAG1INIT SQUARE (COMMA props)? TAGEND
+	|    TAG1INIT TRIANGLE (COMMA props)? TAGEND
+	|    TAG1INIT RECTANGLE (COMMA props)? TAGEND
+	|    TAG1INIT ELLIPSE (COMMA props)? TAGEND
+	|    TAG1INIT LINE (COMMA props)? TAGEND
+	|    TAG1INIT POINT (COMMA props)? TAGEND
 	;
 	
 o_tag_end
 	:	 TAG2INIT CIRCLE TAGEND
+	|	 TAG2INIT SQUARE TAGEND
+	|	 TAG2INIT TRIANGLE TAGEND
+	|	 TAG2INIT RECTANGLE TAGEND
+	|	 TAG2INIT ELLIPSE TAGEND
+	|	 TAG2INIT LINE TAGEND
+	|	 TAG2INIT POINT TAGEND
 	;
 
 	
 props
-	:	O_ID ASSIGN ID (COMMA COLOR ASSIGN color)? (COMMA SIZE ASSIGN REAL)?
-	|	O_ID ASSIGN ID (COMMA SIZE ASSIGN REAL)?  (COMMA COLOR ASSIGN color)?
-	|   COLOR ASSIGN color (COMMA SIZE ASSIGN REAL)? (COMMA O_ID ASSIGN ID)?
-	|   COLOR ASSIGN color (COMMA O_ID ASSIGN ID)? (COMMA SIZE ASSIGN REAL)?
-	|   SIZE ASSIGN REAL (COMMA COLOR ASSIGN color)? (COMMA O_ID ASSIGN ID)?
-	|	SIZE ASSIGN REAL (COMMA O_ID ASSIGN ID)? (COMMA COLOR ASSIGN color)? 
+	:	 O_ID ASSIGN ID (COMMA o_scalex)? (COMMA o_scaley)? (COMMA P1 ASSIGN REAL (COMMA P2 ASSIGN REAL)?)? (COMMA COLOR ASSIGN color)? (COMMA FILL ASSIGN color)? (COMMA BORDER ASSIGN color)? (COMMA ROTATION ASSIGN REAL )?
+	|	 o_scalex (COMMA o_scaley)? (COMMA P1 ASSIGN REAL (COMMA P2 ASSIGN REAL)?)? (COMMA COLOR ASSIGN color)? (COMMA FILL ASSIGN color)? (COMMA BORDER ASSIGN color)? (COMMA ROTATION ASSIGN REAL )?
+	|	 o_scaley (COMMA P1 ASSIGN REAL (COMMA P2 ASSIGN REAL)?)? (COMMA COLOR ASSIGN color)? (COMMA FILL ASSIGN color)? (COMMA BORDER ASSIGN color)? (COMMA ROTATION ASSIGN REAL )?
+	|	 P1 ASSIGN REAL (COMMA P2 ASSIGN REAL)? (COMMA COLOR ASSIGN color)? (COMMA FILL ASSIGN color)? (COMMA BORDER ASSIGN color)? (COMMA ROTATION ASSIGN REAL )?
+	|	 COLOR ASSIGN color (COMMA FILL ASSIGN color)? (COMMA BORDER ASSIGN color)? (COMMA ROTATION ASSIGN REAL )?
+	|	 FILL ASSIGN color (COMMA BORDER ASSIGN color)? (COMMA ROTATION ASSIGN REAL )?
+	|	 BORDER ASSIGN color (COMMA ROTATION ASSIGN REAL )?
+	|	 ROTATION ASSIGN REAL
+	;
+
+o_scalex
+	:	COORD_X ASSIGN REAL
+	;
+	
+o_scaley
+	:   COORD_Y ASSIGN REAL
 	;
 
 color
@@ -98,19 +127,21 @@ SQUARE         : 'square';
 ELLIPSE		   : 'ellipse';
 RECTANGLE      : 'rectangle';
 TRIANGLE       : 'triangle';
-
+LINE		   : 'line';
+POINT 		   : 'point';
 
 SCALE_X		   : 'x';
 SCALE_Y		   : 'y';
+COORD_X		   : 'cx';
+COORD_Y		   : 'cy';
 O_ID		   : 'id';
 PROPS		   : 'props';
 COLOR		   : 'color';
-SIZE		   : 'size';
-POSITION       : 'position';
-R			   : 'r';
-H              : 'h';
-L			   : 'l';
+P1			   : 'p1';
+P2			   : 'p2';
+ROTATION       : 'rotation';
 FILL		   : 'fill';
+BORDER		   : 'border';
 
 REAL		   : [0-9]+ ('.' [0-9]+)?;
 COLOR_G		   : 'green';

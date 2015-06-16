@@ -22,6 +22,7 @@ public class UNCADBaseListener implements UNCADListener {
 	 */
 	UNCADParser parser;
 	ArrayList<CanvasShape> shapes;
+	ArrayDeque<CanvasShape> shape_predeclaration_stack;
 	ArrayDeque<CanvasShape> shape_declaration_stack;
 	ArrayDeque<String> prop_declaration_stack;
 	JFrame frame;
@@ -30,11 +31,21 @@ public class UNCADBaseListener implements UNCADListener {
 	boolean error_flag = false;
 	boolean canvas_flag = false;
 	
+	ArrayList<String> shape_words;
+	
 	public UNCADBaseListener(UNCADParser parser,String name) {
 		this.parser = parser;
 		this.shapes = new ArrayList<CanvasShape>();
 		this.frame = new JFrame();
 		this.frame.setTitle(name);
+		this.shape_words = new ArrayList<String>();
+		shape_words.add("circle");
+		shape_words.add("ellipse");
+		shape_words.add("square");
+		shape_words.add("rectangle");
+		shape_words.add("triangle");
+		this.shape_predeclaration_stack = new ArrayDeque<CanvasShape>();
+		this.shape_declaration_stack = new ArrayDeque<CanvasShape>();
 	}
 	
 	
@@ -67,10 +78,8 @@ public class UNCADBaseListener implements UNCADListener {
 	@Override public void enterCanvas_init(UNCADParser.Canvas_initContext ctx) { 
 		System.out.println("canvas init tag detected");
 		if(!canvas_flag){
-			System.out.println(ctx.getText());
+			//System.out.println(ctx.getText());
 			canvas_flag = true;
-		}else{
-			System.out.println("Error(Line:"+ctx.getStart().getLine()+") Previous canvas declaration detected.");
 		}
 	}
 	/**
@@ -79,15 +88,17 @@ public class UNCADBaseListener implements UNCADListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitCanvas_init(UNCADParser.Canvas_initContext ctx) { 
-		System.out.println("canvas end tag detected \n props suposed to be verified");
-		System.out.println(ctx.getText());
+		System.out.println("canvas init tag end \n props suposed to be verified");
+		//System.out.println(ctx.getText());
 	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterCanvas_end(UNCADParser.Canvas_endContext ctx) { }
+	@Override public void enterCanvas_end(UNCADParser.Canvas_endContext ctx) {
+		System.out.println("canvas end tag detected");
+	}
 	/**
 	 * {@inheritDoc}
 	 *
@@ -111,7 +122,39 @@ public class UNCADBaseListener implements UNCADListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterBody(UNCADParser.BodyContext ctx) { }
+	@Override public void enterCanvas_scalex(UNCADParser.Canvas_scalexContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCanvas_scalex(UNCADParser.Canvas_scalexContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterCanvas_scaley(UNCADParser.Canvas_scaleyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCanvas_scaley(UNCADParser.Canvas_scaleyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterBody(UNCADParser.BodyContext ctx) { 
+		if(canvas_flag){
+			//System.out.println(ctx.getText());
+			//if(ctx.getText().contains("<canvas>")){
+			if(ctx.getTokens(4).size()>0){
+				System.out.println("Error(Line:"+ctx.getTokens(4).get(0).getSymbol().getLine()+") Previous canvas declaration detected.");
+			}
+		}
+	}
 	/**
 	 * {@inheritDoc}
 	 *
@@ -159,7 +202,9 @@ public class UNCADBaseListener implements UNCADListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterO_tag(UNCADParser.O_tagContext ctx) { }
+	@Override public void enterO_tag(UNCADParser.O_tagContext ctx) { 
+		System.out.println("Object tag pair detected(sin match)");
+	}
 	/**
 	 * {@inheritDoc}
 	 *
@@ -171,13 +216,31 @@ public class UNCADBaseListener implements UNCADListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterO_tag_init(UNCADParser.O_tag_initContext ctx) { }
+	@Override public void enterO_tag_init(UNCADParser.O_tag_initContext ctx) { 
+		System.out.println("Object declaration init tag detected");
+		String in = ctx.getText();
+		in = in.replace("<","");
+		in = in.replace(">","");
+		String[] split_in = in.split(",");
+		String shape_type = split_in[0];
+		if(shape_words.contains(shape_type)){
+			CanvasShape shape = new CanvasShape(shape_type);
+			System.out.println("Shape predeclaration: "+shape_type);
+			shape_predeclaration_stack.push(shape);
+			//System.out.println(shape_predeclaration_stack.peekFirst().getType());
+			
+		}else{
+			System.out.println("Error(Line:"+ctx.getStart().getLine()+") Shape type not declared. ("+shape_type+")");
+		}
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitO_tag_init(UNCADParser.O_tag_initContext ctx) { }
+	@Override public void exitO_tag_init(UNCADParser.O_tag_initContext ctx) { 
+				
+	}
 	/**
 	 * {@inheritDoc}
 	 *
@@ -189,19 +252,58 @@ public class UNCADBaseListener implements UNCADListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitO_tag_end(UNCADParser.O_tag_endContext ctx) { }
+	@Override public void exitO_tag_end(UNCADParser.O_tag_endContext ctx) { 
+		System.out.println("Object declaration end tag detected");
+		String in = ctx.getText();
+		in = in.replace("</","");
+		in = in.replace(">","");
+		String[] split_in = in.split(",");
+		String shape_type = split_in[0];
+		System.out.println(in);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterProps(UNCADParser.PropsContext ctx) { }
+	@Override public void enterProps(UNCADParser.PropsContext ctx) {
+		System.out.println("Object props detected :");
+		System.out.println(shape_predeclaration_stack.peekFirst().getType());
+		String in = ctx.getText();
+		String[] split_in = in.split(",");
+		String shape_type = split_in[0];
+		
+	}
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitProps(UNCADParser.PropsContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterO_scalex(UNCADParser.O_scalexContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitO_scalex(UNCADParser.O_scalexContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterO_scaley(UNCADParser.O_scaleyContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitO_scaley(UNCADParser.O_scaleyContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
