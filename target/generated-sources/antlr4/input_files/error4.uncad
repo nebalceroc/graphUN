@@ -1,0 +1,16 @@
+<canvas,x=>
+	<circle,id=c1,color=red>
+	</circle>
+	<triangle,color=green>
+	<square>
+	</square>	
+	</triangle>
+	<canvas>
+	<circle,id=c2,color=red>
+	</circle>
+	<triangle,color=green>
+	<square>
+	</square>	
+	</triangle>
+	</canvas>
+</canvas>
