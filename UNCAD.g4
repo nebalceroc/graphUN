@@ -56,7 +56,7 @@ p_tag_init
 	;
 	
 p_tag_end
-	:	 TAG2INIT PROPS TAGEND
+	:	 TAG2INIT props TAGEND
 	;
 	
 o_tag
@@ -135,7 +135,6 @@ SCALE_Y		   : 'y';
 COORD_X		   : 'cx';
 COORD_Y		   : 'cy';
 O_ID		   : 'id';
-PROPS		   : 'props';
 COLOR		   : 'color';
 P1			   : 'p1';
 P2			   : 'p2';

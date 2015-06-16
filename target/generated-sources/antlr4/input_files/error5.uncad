@@ -1,0 +1,10 @@
+<canvas,x=100,y=50>
+	<circle,id=c1,color=red>
+	</circle>
+	<triangle,color=green>
+	<square>
+	</square>	
+	</triangle>
+	<square,cy=5,p14,fill=red>
+	</square>
+</canvas>
