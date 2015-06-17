@@ -9,6 +9,8 @@ public class CanvasShape{
 	private float cx;
 	private float p1;
 	private float p2;
+	private float p3;
+	private float p4;
 	private float rotation;
 
 	public CanvasShape(Object obj,String type){
@@ -19,10 +21,12 @@ public class CanvasShape{
 		this.obj = null;
 		this.type = type;
 		this.id= "no_id";
-		this.cx=0;
-		this.cy=0;
-		this.p1=1;
-		this.p2=1;
+		this.cx=10;
+		this.cy=10;
+		this.p1=100;
+		this.p2=100;
+		this.p3=50;
+		this.p4=50;
 		this.color="no_color";
 		this.fill="white";
 		this.border="black";
@@ -50,6 +54,12 @@ public class CanvasShape{
 	}
 	public float getP2(){
 		return this.p2;
+	}
+	public float getP3(){
+		return this.p3;
+	}
+	public float getP4(){
+		return this.p4;
 	}
 	public float getRotation(){
 		return this.rotation;
@@ -88,6 +98,12 @@ public class CanvasShape{
 	}
 	public void setP2(float p2){
 		this.p2 = p2;
+	}
+	public void setP3(float p3){
+		this.p3 = p3;
+	}
+	public void setP4(float p4){
+		this.p4 = p4;
 	}
 	public void setRotation(float rotation){
 		this.rotation = rotation;
