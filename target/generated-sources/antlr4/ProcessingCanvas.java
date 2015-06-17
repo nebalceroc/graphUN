@@ -65,9 +65,14 @@ public class ProcessingCanvas extends JPanel{
 	
 	private void drawTriangle(float x, float y, float p1, float p2, float p3, float p4, String color,String fill, String border, float rotation, Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
-        int[] vx = new int[]{(int) x, (int) p1, (int) p3};
-        int[] vy = new int[]{(int) y, (int) p2, (int) p4};
-        g2d.rotate((double) rotation);
+        //int[] vx = new int[]{(int) x, (int) p1, (int) p3};
+        //int[] vy = new int[]{(int) y, (int) p2, (int) p4};
+        int[] vx = new int[]{0, (int) (p1-x), (int) (p3-x)};
+        int[] vy = new int[]{0, (int) (p2-y), (int) (p4-y)};
+        g2d.translate((int) x, (int) y);
+        if((double) rotation != 0){
+        	g2d.rotate((double) rotation);
+        }        
         if(color.equals("no_color")){
 			g2d.setColor(getColor(fill));
 			g2d.fillPolygon(vx,vy,3);
@@ -77,14 +82,23 @@ public class ProcessingCanvas extends JPanel{
 			g2d.setColor(getColor(color));
 			g2d.drawPolygon(vx,vy,3);
 			g2d.fillPolygon(vx,vy,3);
-		}	
+		}
+        if((double) rotation != 0){
+        	g2d.rotate((double) -rotation);
+        } 
+        g2d.translate((int) -x, (int) -y);               
     }
 	
 	private void drawLine(float x, float y, float p1, float p2, float p3, float p4, String color, String border, float rotation, Graphics g){
 		Graphics2D g2d = (Graphics2D) g;
-        int[] vx = new int[]{(int) x, (int) p1, (int) p3};
-        int[] vy = new int[]{(int) y, (int) p2, (int) p4};
-        g2d.rotate((double) rotation);
+        //int[] vx = new int[]{(int) x, (int) p1, (int) p3};
+        //int[] vy = new int[]{(int) y, (int) p2, (int) p4};
+        int[] vx = new int[]{0, (int) (p1-x), (int) (p3-x)};
+        int[] vy = new int[]{0, (int) (p2-y), (int) (p4-y)};
+        g2d.translate((int)(x), (int)(y));
+        if((double) rotation != 0){
+        	g2d.rotate((double) rotation);
+        }  
         if(color.equals("no_color")){
 			g2d.setColor(getColor(border));
 			g2d.drawPolyline(vx,vy,3);
@@ -92,40 +106,58 @@ public class ProcessingCanvas extends JPanel{
 			g2d.setColor(getColor(color));
 			g2d.drawPolyline(vx,vy,3);
 		}
+        if((double) rotation != 0){
+        	g2d.rotate((double) -rotation);
+        } 
+        g2d.translate((int) -x, (int) -y);    
 	}
 	
 	private void drawSquare(float x, float y, float d, String color,String fill, String border, float rotation, Graphics g){
 		drawRectangle(x,y,d,d,color,fill,border,rotation,g);		
 	}
 	
-	private void drawRectangle(float x, float y, float h, float w, String color,String fill, String border, float rotation, Graphics g){
+	private void drawRectangle(float x, float y, float w, float h, String color,String fill, String border, float rotation, Graphics g){
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.rotate((double) rotation);
+		g2d.translate((int)(x), (int)(y));
+        if((double) rotation != 0){
+        	g2d.rotate((double) rotation);
+        }     
 		if(color.equals("no_color")){
 			g2d.setColor(getColor(fill));
-			g2d.fillRect((int) x,(int) y, (int) h, (int) w);
+			g2d.fillRect(0,0, (int) (w), (int) (h));
 			g2d.setColor(getColor(border));
-			g2d.drawRect((int) x,(int) y, (int) h, (int) w);
+			g2d.drawRect(0,0, (int) (w), (int) (h));
 		}else{
 			g2d.setColor(getColor(color));
-			g2d.drawRect((int) x,(int) y, (int) h, (int) w);
-			g2d.fillRect((int) x,(int) y, (int) h, (int) w);
-		}		
+			g2d.drawRect(0,0, (int) (w), (int) (h));
+			g2d.fillRect(0,0, (int) (w), (int) (h));
+		}
+		if((double) rotation != 0){
+        	g2d.rotate((double) -rotation);
+        } 
+        g2d.translate((int) -(x), (int) -(y));     
 	}
 	
 	private void drawOval(float x, float y, float a, float b, String color, String fill, String border, float rotation, Graphics g){
 		Graphics2D g2d = (Graphics2D) g;
-		g2d.rotate((double) rotation);
+		g2d.translate((int)(x), (int)(y));
+        if((double) rotation != 0){
+        	g2d.rotate((double) rotation);
+        }     
 		if(color.equals("no_color")){
 			g2d.setColor(getColor(fill));
-			g2d.fillOval((int) x,(int) y, (int) a, (int) b);
+			g2d.fillOval(0,0, (int) a, (int) b);
 			g2d.setColor(getColor(border));
-			g2d.drawOval((int) x,(int) y, (int) a, (int) b);
+			g2d.drawOval(0,0, (int) a, (int) b);
 		}else{
 			g2d.setColor(getColor(color));
-			g2d.drawOval((int) x, (int) y, (int) a,(int)  b);
-			g2d.fillOval((int) x, (int) y, (int) a,(int)  b);
+			g2d.drawOval(0, 0, (int) a,(int)  b);
+			g2d.fillOval(0, 0, (int) a,(int)  b);
 		}
+		if((double) rotation != 0){
+        	g2d.rotate((double) -rotation);
+        } 
+        g2d.translate((int) -(x), (int) -(y)); 
 		
 	}
 	

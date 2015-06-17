@@ -120,7 +120,7 @@ public class UNCADBaseListener implements UNCADListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void enterCanvas_end(UNCADParser.Canvas_endContext ctx) {
-		System.out.println("canvas end tag detected");
+		//System.out.println("canvas end tag detected");
 	}
 	/**
 	 * {@inheritDoc}
@@ -241,7 +241,9 @@ public class UNCADBaseListener implements UNCADListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitP_tag_end(UNCADParser.P_tag_endContext ctx) { }
+	@Override public void exitP_tag_end(UNCADParser.P_tag_endContext ctx) { 
+		String propr_deleted = prop_declaration_stack.pop();
+	}
 	/**
 	 * {@inheritDoc}
 	 *
@@ -352,18 +354,20 @@ public class UNCADBaseListener implements UNCADListener {
 							break;			
 					}
 				}
-				if(shape_predeclaration_stack.size()>1){
-					shape = shape_predeclaration_stack.pop();
-					CanvasShape shape_parent = shape_predeclaration_stack.peekFirst();
-					shape.setCx(shape.getCx()+shape_parent.getCx());
-					shape.setCy(shape.getCy()+shape_parent.getCy());
-					shape_predeclaration_stack.push(shape);
-				}
-				if(ids.contains(shape.getId()) && !shape.getId().equals("no_id")){
-					System.out.println("Error(Line:"+ctx.getStart().getLine()+") Dublicated id detected.");
-				}else{
-					ids.add(shape.getId());
-				}
+				
+				
+				
+			}		
+			if(shape_predeclaration_stack.size()>0){
+				CanvasShape shape_parent = shape_predeclaration_stack.peekFirst();
+				shape.setCx(shape.getCx()+shape_parent.getCx());
+				shape.setCy(shape.getCy()+shape_parent.getCy());
+				shape.setRotation(shape.getRotation()+shape_parent.getRotation());
+			}
+			if(ids.contains(shape.getId()) && !shape.getId().equals("no_id")){
+				System.out.println("Error(Line:"+ctx.getStart().getLine()+") Dublicated id detected.");
+			}else{
+				ids.add(shape.getId());
 			}
 			shape_declaration_stack.push(shape);
 		}
@@ -424,12 +428,18 @@ public class UNCADBaseListener implements UNCADListener {
 			if(shape_predeclaration_stack.size()>1){
 				shape = shape_predeclaration_stack.pop();
 				CanvasShape shape_parent = shape_predeclaration_stack.peekFirst();
-				shape.setCx(shape.getCx()+shape_parent.getCx());
-				shape.setCy(shape.getCy()+shape_parent.getCy());
+				shape.setCx(shape_parent.getCx());
+				shape.setCy(shape_parent.getCy());
+				if(shape.getType().equals("triangle") || shape.getType().equals("line")){
+					shape.setP1(shape.getP1()+shape_parent.getCx());
+					shape.setP2(shape.getP2()+shape_parent.getCy());
+					shape.setP3(shape.getP3()+shape_parent.getCx());
+					shape.setP4(shape.getP4()+shape_parent.getCy());					
+				}
 				shape_predeclaration_stack.push(shape);
 			}
 			if(ids.contains(shape.getId()) && !shape.getId().equals("no_id")){
-				System.out.println("Error(Line:"+ctx.getStart().getLine()+") Dublicated id detected.");
+				System.out.println("Error(Line:"+ctx.getStart().getLine()+") Duplicated id detected.");
 			}else{
 				ids.add(shape.getId());
 			}

@@ -21,15 +21,16 @@ public class CanvasShape{
 		this.obj = null;
 		this.type = type;
 		this.id= "no_id";
-		this.cx=10;
-		this.cy=10;
-		this.p1=100;
-		this.p2=100;
-		this.p3=50;
-		this.p4=50;
+		this.cx=100;
+		this.cy=100;
+		this.p1=200;
+		this.p2=200;
+		this.p3=500;
+		this.p4=500;
 		this.color="no_color";
 		this.fill="white";
 		this.border="black";
+		this.rotation=0;
 	}
 	public Object getObj(){
 		return this.obj;
